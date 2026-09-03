@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bon Mariage — Bridal & Evening Wear Boutique</title>
+<meta name="description" content="Bon Mariage boutique — luxury bridal gowns, evening wear, and engagement dresses. Book your fitting appointment today.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="container site-nav-inner">
+    <div class="brand">BON <span>MARIAGE</span></div>
+    <div class="nav-links">
+      <a href="#collection">Collection</a>
+      <a href="#" onclick="openBookingModal(); return false;">Book a Fitting</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <h1>Wear the moment <em>beautifully</em></h1>
+    <p>Discover our curated collection of bridal gowns, evening wear, and engagement dresses — then book a private fitting appointment in minutes.</p>
+    <button class="btn btn-dark" onclick="openBookingModal()">Book a Fitting Appointment</button>
+  </div>
+</header>
+
+<main class="container" id="collection">
+  <div class="filter-row" id="filter-row"></div>
+  <div class="product-grid" id="product-grid">
+    <p class="empty-note" id="loading-note">Loading collection...</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p><strong>Bon Mariage</strong> — Bridal &amp; Evening Wear Boutique</p>
+    <p style="margin-top:6px;">Book a fitting appointment above, or reach out directly to arrange your visit.</p>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">Book a Fitting Appointment</span>
+      <button class="modal-close" onclick="closeModal('booking-modal')">✕</button>
+    </div>
+    <p id="booking-product-line" style="font-size:12.5px;color:var(--gold-dim);font-weight:700;margin:-10px 0 18px;"></p>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="bk-name" placeholder="Your full name">
+    </div>
+    <div class="form-group">
+      <label>Phone / WhatsApp Number</label>
+      <input type="tel" id="bk-phone" placeholder="+970 5XXXXXXXX">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Preferred Date</label>
+        <input type="date" id="bk-date">
+      </div>
+      <div class="form-group">
+        <label>Time Slot</label>
+        <input type="time" id="bk-time">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes (size, occasion, requests)</label>
+      <textarea id="bk-notes" placeholder="Anything we should know before your visit?"></textarea>
+    </div>
+    <button class="btn btn-gold btn-block" onclick="submitBooking()">Confirm Appointment</button>
+    <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:14px;line-height:1.6;">
+      Your request is saved instantly and a summary is sent to us via WhatsApp for quick confirmation.
+    </p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/storefront.js"></script>
+</body>
+</html>

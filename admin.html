@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bon Mariage — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+
+<!-- ACCESS GATE -->
+<div class="gate-screen" id="gate-screen">
+  <div style="font-size:15px;font-weight:800;letter-spacing:1px;">BON MARIAGE <span style="color:var(--gold);">ADMIN</span></div>
+  <p style="font-size:12.5px;color:#8a8478;">Enter your admin key to continue</p>
+  <input type="password" id="gate-key-input" placeholder="Admin key" autofocus>
+  <button class="btn btn-gold" onclick="submitGateKey()">Enter Dashboard</button>
+  <p id="gate-error" style="font-size:11.5px;color:#f0918e;display:none;">Incorrect key — please try again.</p>
+</div>
+
+<div class="admin-shell" id="admin-shell" style="display:none;">
+
+  <aside class="admin-sidebar">
+    <div class="admin-brand">BON <span>MARIAGE</span></div>
+    <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">📊 Overview</button>
+    <button class="tab-btn" data-tab="products" onclick="switchTab('products')">👗 Products</button>
+    <button class="tab-btn" data-tab="appointments" onclick="switchTab('appointments')">📅 Appointments</button>
+    <div style="flex:1;"></div>
+    <button class="tab-btn" onclick="logout()">🚪 Log out</button>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- ============ OVERVIEW / ANALYTICS TAB ============ -->
+    <section class="tab-panel active" id="tab-dashboard">
+      <div class="admin-topbar">
+        <div>
+          <h2>Overview</h2>
+          <p>Visitor metrics, wishlist activity, and appointment insights.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadAnalytics()">↻ Refresh</button>
+      </div>
+
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-box"><div class="num">—</div><div class="label">TODAY'S VISITS</div></div>
+        <div class="stat-box"><div class="num">—</div><div class="label">TOTAL VISITS</div></div>
+        <div class="stat-box"><div class="num">—</div><div class="label">TOTAL PRODUCTS</div></div>
+        <div class="stat-box"><div class="num">—</div><div class="label">PENDING REQUESTS</div></div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Most-Liked Dresses</h3>
+        <div id="most-liked-list"><p class="empty-note">Loading…</p></div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Appointment Requests by Status</h3>
+        <div id="appointment-status-breakdown"><p class="empty-note">Loading…</p></div>
+      </div>
+
+      <div class="panel-card">
+        <h3>Inventory Snapshot</h3>
+        <div id="inventory-breakdown"><p class="empty-note">Loading…</p></div>
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTS TAB ============ -->
+    <section class="tab-panel" id="tab-products">
+      <div class="admin-topbar">
+        <div>
+          <h2>Products</h2>
+          <p>Add, edit, and manage inventory availability.</p>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="openProductModal()">+ Add Dress</button>
+      </div>
+
+      <div class="panel-card">
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Photo</th><th>Title</th><th>Category</th><th>Price</th><th>Sizes</th>
+                <th>Likes</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <tr><td colspan="8" class="empty-note">Loading products…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APPOINTMENTS TAB ============ -->
+    <section class="tab-panel" id="tab-appointments">
+      <div class="admin-topbar">
+        <div>
+          <h2>Appointments</h2>
+          <p>Manage bridal fitting requests from the storefront.</p>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Client</th><th>Phone</th><th>Dress</th><th>Date</th><th>Time</th>
+                <th>Notes</th><th>Status</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="appointments-table-body">
+              <tr><td colspan="8" class="empty-note">Loading appointments…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ PRODUCT ADD/EDIT MODAL ============ -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title" id="product-modal-title">Add New Dress</span>
+      <button class="modal-close" onclick="closeModal('product-modal')">✕</button>
+    </div>
+
+    <input type="hidden" id="pf-id">
+    <div class="admin-form-grid">
+      <div class="form-group full">
+        <label>Title</label>
+        <input type="text" id="pf-title" placeholder="e.g. Royal Lace Bridal Gown">
+      </div>
+      <div class="form-group full">
+        <label>Image URL</label>
+        <input type="text" id="pf-image" placeholder="https://...">
+      </div>
+      <div class="form-group full">
+        <label>Description</label>
+        <textarea id="pf-description" placeholder="Short description shown to customers"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="pf-category">
+          <option value="Bridal">Bridal</option>
+          <option value="Evening">Evening</option>
+          <option value="Engagement">Engagement</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="pf-status">
+          <option value="Available">Available</option>
+          <option value="Rented">Rented</option>
+          <option value="Sold Out">Sold Out</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Price (USD)</label>
+        <input type="number" id="pf-price" min="0" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Rental Price (optional)</label>
+        <input type="number" id="pf-rental" min="0" placeholder="0">
+      </div>
+      <div class="form-group full">
+        <label>Available Sizes</label>
+        <div class="size-toggle-row" id="pf-sizes-row"></div>
+      </div>
+      <div class="form-group full">
+        <label>SKU (optional)</label>
+        <input type="text" id="pf-sku" placeholder="e.g. BM-B01">
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-block" style="margin-top:8px;" onclick="saveProduct()">Save Dress</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>
